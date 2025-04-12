@@ -1,0 +1,6 @@
+click
+langchain
+langchain-community
+openai
+python-dotenv
+setuptools
