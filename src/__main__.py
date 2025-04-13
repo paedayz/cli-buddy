@@ -5,7 +5,7 @@ warnings.simplefilter("ignore", category=LangChainDeprecationWarning)
 import os
 import sys
 from dotenv import load_dotenv
-from langchain_community.chat_models import ChatOpenAI
+from src.rag.infrastructure.llms.openai_client import llm
 from langchain.schema import HumanMessage
 
 def run_repl(llm):
@@ -26,8 +26,6 @@ def run_repl(llm):
 
 def main():
     load_dotenv()
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
-
     user_prompt = " ".join(sys.argv[1:])
 
     if not user_prompt:
