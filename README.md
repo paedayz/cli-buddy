@@ -57,21 +57,36 @@ cli-buddy/
 - `.env` should include:
 
 ---
-
-### 1. Install dependencies
+### 1. Install require packages to local machine
 ```bash
-pip install -e .
+$ pip install -r requirements.txt
 ```
-### 2. Add your OpenAI key
+### 2. Install dependencies
+```bash
+$ pip install -e .
+```
+### 3. Add your OpenAI key
 Create a .env file in the root directory:
 ```bash
-touch .env
+$ touch .env
 ```
-Add your API key:
+Add your ENV:
 ```bash
 OPENAI_API_KEY=your-openai-key-here
+UPSTASH_REDIS_URL=your-upstash-redis-url-here
+UPSTASH_REDIS_TOKEN=your-upstash-redis-token-here
 ```
-### 3. Run it!
+### 4. Run it!
+Run normally
 ```bash
-buddy what can you do?
+$ buddy what can you do?
+```
+
+Run REPL mode
+```bash
+$ buddy
+
+👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.
+
+user>
 ```
