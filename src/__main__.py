@@ -2,24 +2,22 @@ import warnings
 from langchain._api import LangChainDeprecationWarning
 warnings.simplefilter("ignore", category=LangChainDeprecationWarning)
 
-import os
 import sys
 from dotenv import load_dotenv
-from src.rag.infrastructure.llms.openai_client import llm
-from langchain.schema import HumanMessage
+from src.rag.domain.services.chat_service import chat
 
-def run_repl(llm):
+def run_repl():
     print("👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.\n")
     while True:
         try:
-            prompt = input("buddy> ").strip()
+            prompt = input("user> ").strip()
             if prompt.lower() in {"exit", "quit"}:
                 print("👋 Bye!")
                 break
             if not prompt:
                 continue
-            response = llm([HumanMessage(content=prompt)])
-            print(f"🤖 Buddy: {response.content}\n")
+            
+            print(f"buddy: {chat(prompt)}\n")
         except KeyboardInterrupt:
             print("\n👋 Bye!")
             break
@@ -30,9 +28,8 @@ def main():
 
     if not user_prompt:
         # No arguments → enter REPL mode
-        run_repl(llm)
+        run_repl()
     else:
         # Run single-shot command
-        response = llm([HumanMessage(content=user_prompt)])
-        print(f"\n🤖 Buddy: {response.content}")
+        print(f"\nBuddy: {chat(user_prompt)}")
 

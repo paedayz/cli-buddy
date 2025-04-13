@@ -7,11 +7,50 @@ Follow these steps to install and run the **Buddy** CLI on your system.
 ### Directory Structure
 ```bash
 cli-buddy/
-├── buddy/               ← This is a real Python package (must have __init__.py)
-│   ├── __init__.py      ← Can be empty
-│   └── __main__.py      ← Has your CLI logic and `main()`
-├── setup.py
-├── .env
+│   .env
+│   .env_example
+│   .gitignore
+│   main.py
+│   README.md
+│   requirements.txt
+│   setup.py
+│
+└───src
+    │   __init__.py
+    │   __main__.py
+    │
+    ├───rag
+    │   │   __init__.py
+    │   │
+    │   ├───application
+    │   │       
+    │   │
+    │   ├───domain
+    │   │   ├───models
+    │   │   │
+    │   │   └───services
+    │   │       │   
+    │   │       │   chat_service.py
+    │   │       │   general_conversation_chain.py
+    │   │
+    │   ├───infrastructure
+    │   │   ├───history
+    │   │   │   │   upstash.py
+    │   │   │
+    │   │   ├───llms
+    │   │   │   │   openai_client.py
+    │   │   │
+    │   │   ├───prompts
+    │   │   │   │   
+    │   │   │   │   chat_history_prompts.py
+    │   │   │   │   humen_message_prompts.py
+    │   │   │   │   personal_assistant_prompts.py
+    │   │   │
+    │   │   ├───repositories
+    │   │   │       
+    │   │   └───vectorstores
+    │   │           
+    │   ├───interfaces
 ```
 - `buddy/` is the actual Python package. It must contain `__init__.py`.
 - `__main__.py` contains the logic that's executed when you run `buddy`.

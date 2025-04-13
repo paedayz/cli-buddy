@@ -4,3 +4,4 @@ langchain-community
 openai
 python-dotenv
 setuptools
+upstash_redis
