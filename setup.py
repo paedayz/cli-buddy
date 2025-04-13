@@ -12,7 +12,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "buddy=buddy.__main__:main"
+            "buddy=src.__main__:main"
         ]
     },
 )
