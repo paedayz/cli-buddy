@@ -8,16 +8,33 @@ from dotenv import load_dotenv
 from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 
+def run_repl(llm):
+    print("👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.\n")
+    while True:
+        try:
+            prompt = input("buddy> ").strip()
+            if prompt.lower() in {"exit", "quit"}:
+                print("👋 Bye!")
+                break
+            if not prompt:
+                continue
+            response = llm([HumanMessage(content=prompt)])
+            print(f"🤖 Buddy: {response.content}\n")
+        except KeyboardInterrupt:
+            print("\n👋 Bye!")
+            break
+
 def main():
     load_dotenv()
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
 
-    # Grab everything the user types after "buddy"
     user_prompt = " ".join(sys.argv[1:])
 
     if not user_prompt:
-        print("🤖 Buddy says: Please give me something to respond to!")
-        sys.exit(1)
+        # No arguments → enter REPL mode
+        run_repl(llm)
+    else:
+        # Run single-shot command
+        response = llm([HumanMessage(content=user_prompt)])
+        print(f"\n🤖 Buddy: {response.content}")
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
-    response = llm([HumanMessage(content=user_prompt)])
-    print(f"\n🤖 Buddy: {response.content}")
