@@ -22,9 +22,11 @@ def run_repl():
             print("\n👋 Bye!")
             break
 
-def main():
+def main(user_prompt: str = None):
     load_dotenv()
-    user_prompt = " ".join(sys.argv[1:])
+    
+    if (not user_prompt):
+        user_prompt = " ".join(sys.argv[1:])
 
     if not user_prompt:
         # No arguments → enter REPL mode

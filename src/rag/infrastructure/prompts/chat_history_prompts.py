@@ -5,6 +5,7 @@ This is chat history between AI and Humen, please focus on context first and cha
 ```
 {chat_history}
 ```
+--------------------------------------------------------------------------
 \n
 """
 

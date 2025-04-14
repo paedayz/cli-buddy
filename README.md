@@ -10,7 +10,6 @@ cli-buddy/
 │   .env
 │   .env_example
 │   .gitignore
-│   main.py
 │   README.md
 │   requirements.txt
 │   setup.py
@@ -89,4 +88,13 @@ $ buddy
 👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.
 
 user>
+```
+
+---
+
+### Optional
+
+Script for testing
+```bash
+$ python -c "from src.__main__ import main; main('hi')"
 ```
