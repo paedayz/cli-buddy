@@ -10,12 +10,12 @@ from rich.console import Console
 console = Console()
 
 def run_repl():
-    print("👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.\n")
+    console.print("[bold cyan]👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.[/]\n")
     while True:
         try:
             prompt = input("user> ").strip()
             if prompt.lower() in {"exit", "quit"}:
-                print("\n[green]Buddy:👋 Bye![/]")
+                console.print("\n[green]Buddy:👋 Bye![/]")
                 break
             if not prompt:
                 continue
@@ -23,10 +23,10 @@ def run_repl():
             with console.status("[bold cyan]Buddy is thinking...[/]", spinner="dots"):
                 response = chat(prompt)
 
-            console.print(f"[green]Buddy: {response}[/]\n")
+            console.print(f"[bold green]Buddy:[/][green] {response}[/]\n")
 
         except KeyboardInterrupt:
-            print("\n[green]Buddy:👋 Bye![/]")
+            console.print("\n [green]Buddy:👋 Bye![/]")
             break
 
 def main(user_prompt: str = None):
@@ -43,5 +43,5 @@ def main(user_prompt: str = None):
         with console.status("[bold cyan]Buddy is thinking...[/]", spinner="dots"):
             response = chat(user_prompt)
 
-        console.print(f"\n[green]Buddy:[/] {response}")
+        console.print(f"[bold green]Buddy:[/][green] {response}[/]\n")
 
