@@ -28,5 +28,5 @@ def get_conversation_chain(query: str, tools_call_answer: str) -> LLMChain:
                 llm=llm,
                 prompt=chat_prompt,
                 memory=memory,
-                verbose=True  # ✅ Enables logging of inputs/outputs
+                verbose=False  # ✅ Enables logging of inputs/outputs
             )

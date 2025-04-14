@@ -5,6 +5,9 @@ warnings.simplefilter("ignore", category=LangChainDeprecationWarning)
 import sys
 from dotenv import load_dotenv
 from src.rag.domain.services.chat_service import chat
+from rich.console import Console
+
+console = Console()
 
 def run_repl():
     print("👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.\n")
@@ -12,20 +15,24 @@ def run_repl():
         try:
             prompt = input("user> ").strip()
             if prompt.lower() in {"exit", "quit"}:
-                print("👋 Bye!")
+                print("\n[green]Buddy:👋 Bye![/]")
                 break
             if not prompt:
                 continue
-            
-            print(f"buddy: {chat(prompt)}\n")
+
+            with console.status("[bold cyan]Buddy is thinking...[/]", spinner="dots"):
+                response = chat(prompt)
+
+            console.print(f"[green]Buddy: {response}[/]\n")
+
         except KeyboardInterrupt:
-            print("\n👋 Bye!")
+            print("\n[green]Buddy:👋 Bye![/]")
             break
 
 def main(user_prompt: str = None):
     load_dotenv()
     
-    if (not user_prompt):
+    if not user_prompt:
         user_prompt = " ".join(sys.argv[1:])
 
     if not user_prompt:
@@ -33,5 +40,8 @@ def main(user_prompt: str = None):
         run_repl()
     else:
         # Run single-shot command
-        print(f"\nBuddy: {chat(user_prompt)}")
+        with console.status("[bold cyan]Buddy is thinking...[/]", spinner="dots"):
+            response = chat(user_prompt)
+
+        console.print(f"\n[green]Buddy:[/] {response}")
 
