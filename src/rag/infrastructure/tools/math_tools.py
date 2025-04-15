@@ -209,24 +209,3 @@ def letter_counting(a: str, b: str) -> int:
     """
     return f'There are {a.count(b)} {b} in {a}'
 
-def execute_math_tool_call(call):
-    
-    func_map = {
-        "Multiply": lambda a, b: multiply(a, b),
-        "Add": lambda a, b: add(a, b),
-        "LetterCount": lambda a, b: letter_counting(a, b),
-        "Subtract": lambda a, b: subtract(a, b),
-        "Divide": lambda a, b: divide(a, b),
-        "Power": lambda a, b: power(a, b),
-        "Factorial": lambda a: factorial(a),
-        "Fibonacci": lambda a: fibonacci(a),
-        "Prime": lambda a: prime(a),
-        "GCD": lambda a, b: gcd(a, b),
-        "LCM": lambda a, b: lcm(a, b),
-        "Sum": lambda a: sum(a),
-        "Mean": lambda a: mean(a),
-        "Median": lambda a: median(a),
-        "Mode": lambda a: mode(a),
-        "Sqrt": lambda a: sqrt(a),
-    }
-    return func_map[call['name']](**call['args'])

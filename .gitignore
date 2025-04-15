@@ -1,3 +1,5 @@
 __pycache__
 buddy.egg-info
 .env
+google_credentials.json
+google_OAuth2_token.json
