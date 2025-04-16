@@ -2,7 +2,7 @@ from langchain.chat_models import init_chat_model
 
 from src.rag.domain.services.general_conversation_chain import get_conversation_chain
 from src.rag.infrastructure.tools._tool_calling import execute_tool_call
-from src.rag.infrastructure.tools.google_work_space_tools import SetCalendar
+from src.rag.infrastructure.tools.google_work_space_tools import SetCalendar, SendMail
 from src.rag.infrastructure.tools.math_tools import Add, Subtract, Multiply, Divide, Prime, Sqrt, Factorial, Fibonacci, Mode, LetterCount
 
 def chat(query: str) -> str:
@@ -29,7 +29,8 @@ def get_answer_from_tools_call(query: str) -> str:
         Fibonacci,
         Mode,
         LetterCount,
-        SetCalendar
+        SetCalendar,
+        SendMail
     ]
     
     llm = init_chat_model("gpt-4o-mini", model_provider="openai")

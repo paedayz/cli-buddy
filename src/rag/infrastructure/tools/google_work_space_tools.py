@@ -8,9 +8,14 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from email.mime.text import MIMEText
+import base64
 
 # If modifying these scopes, delete the file google_OAuth2_token.json.
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
+SCOPES = [
+    "https://www.googleapis.com/auth/calendar",
+    "https://www.googleapis.com/auth/gmail.send"
+]
 
 # {
 #     "summary": "My Python Event",
@@ -75,3 +80,40 @@ def setCalendar(summary: str, start_time: str, end_time: str):
     except HttpError as error:
         print(f"An error occurred: {error}")
         return "somthing went wrong can't set event"
+
+class SendMail(TypedDict):
+    """send email to recipient"""
+    to: Annotated[str, ..., "recipient email address"]
+    subject: Annotated[str, ..., "subject of the email"]
+    body: Annotated[str, ..., "content of the email"]
+
+def create_message(to: str, subject: str, body: str):
+    message = MIMEText(body)
+    message["To"] = to
+    message["Subject"] = subject
+    raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
+    return {"raw": raw}
+
+def sendMail(to: str, subject: str, body: str):
+    creds = None
+    if os.path.exists("google_OAuth2_token.json"):
+        creds = Credentials.from_authorized_user_file("google_OAuth2_token.json", SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "google_credentials.json", SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+        with open("google_OAuth2_token.json", "w") as token:
+            token.write(creds.to_json())
+
+    try:
+        service = build("gmail", "v1", credentials=creds)
+        message = create_message(to, subject, body)
+        send_result = service.users().messages().send(userId="me", body=message).execute()
+        return f"Email sent successfully: ID {send_result['id']}"
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return "something went wrong, can't send email"

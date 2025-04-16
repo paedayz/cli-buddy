@@ -20,5 +20,6 @@ def execute_tool_call(call):
         "Mode": lambda a: mode(a),
         "Sqrt": lambda a: sqrt(a),
         "SetCalendar": lambda summary, start_time, end_time: setCalendar(summary, start_time, end_time),
+        "SendMail": lambda to, subject, body: sendMail(to, subject, body),
     }
     return func_map[call['name']](**call['args'])
