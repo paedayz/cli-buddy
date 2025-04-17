@@ -6,6 +6,7 @@ import sys
 from dotenv import load_dotenv
 from src.rag.domain.services.chat_service import chat
 from rich.console import Console
+import asyncio
 
 console = Console()
 
@@ -37,11 +38,11 @@ def main(user_prompt: str = None):
 
     if not user_prompt:
         # No arguments → enter REPL mode
-        run_repl()
+        asyncio.run(run_repl())
     else:
         # Run single-shot command
         with console.status("[bold cyan]Buddy is thinking...[/]", spinner="dots"):
-            response = chat(user_prompt)
+            response = asyncio.run(chat(user_prompt))
 
         console.print(f"[bold green]Buddy:[/][green] {response}[/]\n")
 

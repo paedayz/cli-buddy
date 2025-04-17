@@ -4,6 +4,7 @@ google-auth-httplib2
 google-auth-oauthlib
 langchain
 langchain-community
+langchain-mcp-adapters
 langchain-openai
 openai
 python-dotenv
