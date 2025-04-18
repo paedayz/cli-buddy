@@ -10,7 +10,7 @@ import asyncio
 
 console = Console()
 
-def run_repl():
+async def run_repl():
     console.print("[bold cyan]👋 Welcome to Buddy CLI! Type 'exit' or 'quit' to leave.[/]\n")
     while True:
         try:
@@ -22,7 +22,7 @@ def run_repl():
                 continue
 
             with console.status("[bold cyan]Buddy is thinking...[/]", spinner="dots"):
-                response = chat(prompt)
+                response = await chat(prompt)
 
             console.print(f"[bold green]Buddy:[/][green] {response}[/]\n")
 
