@@ -1,17 +1,14 @@
-import warnings
+from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain.chat_models import init_chat_model
+from langgraph.prebuilt import create_react_agent
 
 from src.rag.domain.services.general_conversation_chain import get_conversation_chain
+from src.rag.infrastructure.llms.openai_client import llm
 from src.rag.infrastructure.tools._tool_calling import execute_tool_call
 from src.rag.infrastructure.tools.google_work_space_tools import SetCalendar, SendMail
 from src.rag.infrastructure.tools.math_tools import Add, Subtract, Multiply, Divide, Prime, Sqrt, Factorial, Fibonacci, Mode, LetterCount
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
-from langchain_mcp_adapters.tools import load_mcp_tools
-from langgraph.prebuilt import create_react_agent
 
-from src.rag.infrastructure.llms.openai_client import llm
-from pathlib import Path
+import warnings
 
 async def chat(query: str) -> str:
     tools_call_answer = await get_answer_from_mcp(query=query)
@@ -24,22 +21,26 @@ async def chat(query: str) -> str:
     return result["text"]
 
 async def get_answer_from_mcp(query: str) -> str:
-    server_params = StdioServerParameters(
-        command="python",
-        # Make sure to update to the full absolute path to your math_server.py file
-        args=["src/rag/infrastructure/mcp/math_server.py"],
-    )
-
-    async with stdio_client(server_params) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-            tools = await load_mcp_tools(session)
-            agent = create_react_agent(llm, tools)
-            agent_response = await agent.ainvoke({"messages": query})
-            agent_response_messages = agent_response["messages"]
-            final_result = agent_response_messages[len(agent_response_messages) - 1].content
-            
-            return final_result
+    async with MultiServerMCPClient(
+        {
+            "math": {
+                "command": "python",
+                "args": ["src/rag/infrastructure/mcp/math_server.py"],
+                "transport": "stdio",
+            },
+            "google_work_space": {
+                "command": "python",
+                "args": ["src/rag/infrastructure/mcp/google_work_space_server.py"],
+                "transport": "stdio",
+            }
+        }
+    ) as client:
+        agent = create_react_agent(llm, client.get_tools())
+        agent_response = await agent.ainvoke({"messages": query})
+        agent_response_messages = agent_response["messages"]
+        final_result = agent_response_messages[len(agent_response_messages) - 1].content
+        
+        return final_result
         
 # NOTE: Deprecated
 def get_answer_from_tools_call(query: str) -> str:
