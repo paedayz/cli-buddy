@@ -90,6 +90,16 @@ $ buddy
 user>
 ```
 
+Run Voice mode
+```bash
+$ buddy --voice
+
+🎧 Voice-activated Buddy CLI. Say 'hey buddy' to start.
+🎙 Listening for 'hey buddy'...
+
+user>
+```
+
 ---
 
 ### Optional
