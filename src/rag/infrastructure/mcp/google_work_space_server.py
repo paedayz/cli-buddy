@@ -7,6 +7,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from email.mime.text import MIMEText
 import base64
+from datetime import datetime, timedelta
 
 from mcp.server.fastmcp import FastMCP
 
@@ -68,6 +69,56 @@ def setCalendar(summary: str, start_time: str, end_time: str):
     except HttpError as error:
         print(f"An error occurred: {error}")
         return "somthing went wrong can't set event"
+
+@mcp.tool()
+def getCalendarEvents(days_from_now: int):
+    """
+    Get upcoming Google Calendar events from now up to N days in the future.
+
+    :param days_from_now: number of days from now to retrieve events
+    :return: list of event summaries with start times
+    """
+    creds = None
+    if os.path.exists("google_OAuth2_token.json"):
+        creds = Credentials.from_authorized_user_file("google_OAuth2_token.json", SCOPES)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "google_credentials.json", SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+        with open("google_OAuth2_token.json", "w") as token:
+            token.write(creds.to_json())
+
+    try:
+        service = build("calendar", "v3", credentials=creds)
+
+        now = datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
+        future = (datetime.utcnow() + timedelta(days=days_from_now)).isoformat() + "Z"
+
+        events_result = (
+            service.events()
+            .list(calendarId="primary", timeMin=now, timeMax=future, singleEvents=True, orderBy="startTime")
+            .execute()
+        )
+        events = events_result.get("items", [])
+
+        if not events:
+            return "No events found."
+
+        event_list = []
+        for event in events:
+            start = event["start"].get("dateTime", event["start"].get("date"))
+            event_list.append(f"{start} - {event['summary']}")
+
+        return event_list
+
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return "Something went wrong, can't fetch events."
 
 def create_message(to: str, subject: str, body: str):
     message = MIMEText(body)
