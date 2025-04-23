@@ -4,6 +4,7 @@ from langgraph.prebuilt import create_react_agent
 
 from src.rag.domain.services.general_conversation_chain import get_conversation_chain
 from src.rag.infrastructure.llms.openai_client import llm
+from src.rag.infrastructure.logs import logger
 from src.rag.infrastructure.tools._tool_calling import execute_tool_call
 from src.rag.infrastructure.tools.google_work_space_tools import SetCalendar, SendMail
 from src.rag.infrastructure.tools.math_tools import Add, Subtract, Multiply, Divide, Prime, Sqrt, Factorial, Fibonacci, Mode, LetterCount
@@ -32,11 +33,18 @@ async def get_answer_from_mcp(query: str) -> str:
                 "command": "python",
                 "args": ["src/rag/infrastructure/mcp/google_work_space_server.py"],
                 "transport": "stdio",
+            },
+            "ninjas": {
+                "command": "python",                
+                "args": ["src/rag/infrastructure/mcp/ninjas_server.py"],
+                "transport": "stdio",
             }
         }
     ) as client:
-        agent = create_react_agent(llm, client.get_tools())
+        tools = client.get_tools()
+        agent = create_react_agent(llm, tools)
         agent_response = await agent.ainvoke({"messages": query})
+        logger.log(f'agent_response: {agent_response}')
         agent_response_messages = agent_response["messages"]
         final_result = agent_response_messages[len(agent_response_messages) - 1].content
         

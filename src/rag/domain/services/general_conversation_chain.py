@@ -1,3 +1,4 @@
+import os
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
@@ -7,6 +8,8 @@ from src.rag.infrastructure.prompts.chat_history_prompts import general_chat_his
 from src.rag.infrastructure.prompts.humen_message_prompts import general_humen_message_prompt
 from src.rag.infrastructure.prompts.combine_tools_prompts import get_general_combine_tools_prompt
 from src.rag.infrastructure.llms.openai_client import llm
+
+ENV = os.getenv('ENV', 'dev')
 
 def get_conversation_chain(query: str, tools_call_answer: str) -> LLMChain:
     history = get_redis_history(session_id="test")
@@ -28,5 +31,5 @@ def get_conversation_chain(query: str, tools_call_answer: str) -> LLMChain:
                 llm=llm,
                 prompt=chat_prompt,
                 memory=memory,
-                verbose=False  # ✅ Enables logging of inputs/outputs
+                verbose=ENV != 'prod'  # ✅ Enables logging of inputs/outputs
             )

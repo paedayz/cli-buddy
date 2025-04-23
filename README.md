@@ -74,6 +74,7 @@ Add your ENV:
 OPENAI_API_KEY=your-openai-key-here
 UPSTASH_REDIS_URL=your-upstash-redis-url-here
 UPSTASH_REDIS_TOKEN=your-upstash-redis-token-here
+NINIJAS_API_KEY=your-ninjas-api-key-here
 ```
 ### 4. Run it!
 Run normally
