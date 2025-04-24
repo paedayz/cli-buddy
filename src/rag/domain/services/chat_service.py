@@ -38,6 +38,11 @@ async def get_answer_from_mcp(query: str) -> str:
                 "command": "python",                
                 "args": ["src/rag/infrastructure/mcp/ninjas_server.py"],
                 "transport": "stdio",
+            },
+            "browser": {
+                "command": "python",                
+                "args": ["src/rag/infrastructure/mcp/browser_server.py"],
+                "transport": "stdio",
             }
         }
     ) as client:
