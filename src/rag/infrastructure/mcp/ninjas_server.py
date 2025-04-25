@@ -27,6 +27,7 @@ def get_calories_burned(activity):
         return f"Error: {response.text}"
     
     
+@mcp.tool()
 def get_random_quote():
     """
     get random quote
@@ -35,6 +36,27 @@ def get_random_quote():
     :return: quote
     """
     api_url = '{}/v1/quotes'.format(URL)
+    response = requests.get(api_url, headers={'X-Api-Key': NINIJAS_API_KEY})
+    if response.status_code == requests.codes.ok:
+        return response.text
+    else:
+        return f"Error: {response.text}"
+
+@mcp.tool()
+def get_exchange_rate(from_currency, to_currency):
+    """
+    get exchange rate
+    
+    :param from_currency: from currency
+    :param to_currency: to currency
+    
+    params example:
+        from_currency = 'USD'
+        to_currency = 'EUR'
+        
+    :return: exchange rate
+    """
+    api_url = '{}/v1/exchangerate?pair={}_{}'.format(URL, from_currency, to_currency)
     response = requests.get(api_url, headers={'X-Api-Key': NINIJAS_API_KEY})
     if response.status_code == requests.codes.ok:
         return response.text
