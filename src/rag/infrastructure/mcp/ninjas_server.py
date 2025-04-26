@@ -62,6 +62,22 @@ def get_exchange_rate(from_currency, to_currency):
         return response.text
     else:
         return f"Error: {response.text}"
+    
+    
+@mcp.tool()
+def get_bitcoin_price():
+    """
+    get bitcoin price
+    
+    :param None
+    :return: price
+    """
+    api_url = '{}/v1/bitcoin'.format(URL)
+    response = requests.get(api_url, headers={'X-Api-Key': NINIJAS_API_KEY})
+    if response.status_code == requests.codes.ok:
+        return response.text
+    else:
+        return f"Error: {response.text}"
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
