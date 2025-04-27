@@ -78,6 +78,22 @@ def get_bitcoin_price():
         return response.text
     else:
         return f"Error: {response.text}"
+    
+    
+@mcp.tool()
+def get_stock_price(ticker):
+    """
+    get stock price
+    
+    :param ticker: ticker
+    :return: price
+    """
+    api_url = '{}/v1/stock?ticker={}'.format(URL, ticker)
+    response = requests.get(api_url, headers={'X-Api-Key': NINIJAS_API_KEY})
+    if response.status_code == requests.codes.ok:
+        return response.text
+    else:
+        return f"Error: {response.text}"
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
